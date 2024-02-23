@@ -1,0 +1,124 @@
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
+import { searchImages } from './js/pixabay-api';
+import { renderImages } from './js/render-functions';
+import { galleryList } from './js/render-functions';
+
+const form = document.querySelector('.form');
+const gallery = document.querySelector('.gallery');
+const loaderContainer = document.querySelector('.loader-container');
+const loadMoreBtn = document.querySelector('.load-more-btn');
+
+let page;
+let maxPage;
+let searchQuery;
+
+const iziToastOptions = {
+  backgroundcolor: 'yellow',
+  messageColor: 'white',
+  messageSize: '14',
+  position: 'topRight',
+  timeout: 3000,
+};
+
+form.addEventListener('submit', onFormSubmit);
+loadMoreBtn.addEventListener('click', onLoadMoreClick);
+
+async function onFormSubmit(event) {
+  event.preventDefault();
+  hideLoadMoreBtn();
+  galleryList.innerHTML = '';
+  searchQuery = event.target.elements.input.value.trim();
+  page = 1;
+
+  if (searchQuery === '') {
+    iziToast.show({
+      ...iziToastOptions,
+      message: 'Fill out the search form!',
+    });
+    return;
+  }
+
+  try {
+    showLoader();
+    const data = await searchImages(searchQuery, page);
+    maxPage = Math.ceil(data.totalHits / 15);
+    if (data.totalHits === 0) {
+      hideLoader();
+      iziToast.show({
+        ...iziToastOptions,
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+      });
+      return;
+    } else {
+      renderImages(data);
+      hideLoader();
+    }
+  } catch (error) {
+    iziToast.error({
+      ...iziToastOptions,
+      title: 'Error',
+      message: error,
+    });
+  }
+  checkBtnVisibleStatus();
+  event.target.reset();
+}
+
+async function onLoadMoreClick() {
+  page += 1;
+  showLoader();
+
+  try {
+    const data = await searchImages(searchQuery, page);
+    renderImages(data);
+  } catch (error) {
+    iziToast.error({
+      ...iziToastOptions,
+      title: 'Error',
+      message: error,
+    });
+  }
+
+  hideLoader();
+  checkBtnVisibleStatus();
+
+  const height = gallery.firstElementChild.getBoundingClientRect().height;
+
+  scrollBy({
+    behavior: 'smooth',
+    top: height * 2,
+  });
+}
+//
+
+//
+function showLoader() {
+  loaderContainer.classList.remove('is-hidden');
+}
+
+function hideLoader() {
+  loaderContainer.classList.add('is-hidden');
+}
+
+function showLoadMoreBtn() {
+  loadMoreBtn.classList.remove('hidden');
+}
+
+function hideLoadMoreBtn() {
+  loadMoreBtn.classList.add('hidden');
+}
+
+function checkBtnVisibleStatus() {
+  if (page >= maxPage) {
+    hideLoadMoreBtn();
+    iziToast.show({
+      ...iziToastOptions,
+      message: "We're sorry, but you've reached the end of search results.",
+    });
+  } else {
+    showLoadMoreBtn();
+  }
+}
