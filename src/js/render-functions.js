@@ -6,7 +6,15 @@ export const galleryList = document.querySelector('.gallery');
 export function renderImages(data) {
   const markup = data.hits
     .map(
-      ({ webformatURL, largeImageURL, targs, views, comments, downloads }) => {
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
         return `<li class="gallery-item">
     <a class="gallery-link" href="${largeImageURL}">
       <img
@@ -14,22 +22,22 @@ export function renderImages(data) {
         src="${webformatURL}"
         alt="${tags}"
       />
-      <div class="desc-container">
-       <div class="img-desc">
-      <p class="img-desc-title">Likes</p>
-      <p class="img-desc-content">${likes}</p>
+      <div class="descriptions-container">
+       <div class="img-description">
+      <p class="img-description-title">Likes</p>
+      <p class="img-description-content">${likes}</p>
     </div>
-    <div class="img-desc">
-      <p class="img-desc-title">Views</p>
-      <p class="img-desc-content">${views}</p>
+    <div class="img-description">
+      <p class="img-description-title">Views</p>
+      <p class="img-description-content">${views}</p>
     </div>
-    <div class="img-desc">
-      <p class="img-desc-title">Comments</p>
-      <p class="img-desc-content">${comments}</p>
+    <div class="img-description">
+      <p class="img-description-title">Comments</p>
+      <p class="img-description-content">${comments}</p>
     </div>
-    <div class="img-desc">
-      <p class="img-desc-title">Downloads</p>
-      <p class="img-desc-content">${downloads}</p>
+    <div class="img-description">
+      <p class="img-description-title">Downloads</p>
+      <p class="img-description-content">${downloads}</p>
     </div>
     </div>
     </a>
@@ -40,9 +48,9 @@ export function renderImages(data) {
   galleryList.insertAdjacentHTML('beforeend', markup);
 
   const gallery = new SimpleLightbox('.gallery a', {
-    caption: true,
+    captions: true,
     captionDelay: 250,
-    captionData: 'alt',
+    captionsData: 'alt',
   });
   gallery.refresh();
 }

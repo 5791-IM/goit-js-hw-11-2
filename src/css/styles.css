@@ -60,7 +60,7 @@ body {
   border-color: #4e75ff;
 }
 
-.btn-form {
+.form-btn {
   width: 100%;
   max-width: 91px;
   border: none;
@@ -71,8 +71,8 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-.btn-form:hover,
-.btn-form:focus {
+.form-btn:hover,
+.form-btn:focus {
   background-color: #6c8cff;
 }
 
@@ -107,19 +107,19 @@ body {
   height: 100%;
 }
 
-.desc-container {
+.descriptions-container {
   display: flex;
   justify-content: space-between;
   padding: 4px 25px 4px 20px;
 }
 
-.img-desc-title {
+.img-description-title {
   font-size: 12px;
   font-weight: 700;
   text-align: center;
 }
 
-.img-desc-content {
+.img-description-content {
   font-size: 12px;
   text-align: center;
 }

@@ -15,7 +15,7 @@ let maxPage;
 let searchQuery;
 
 const iziToastOptions = {
-  backgroundcolor: 'yellow',
+  backgroundColor: 'red',
   messageColor: 'white',
   messageSize: '14',
   position: 'topRight',
@@ -25,11 +25,11 @@ const iziToastOptions = {
 form.addEventListener('submit', onFormSubmit);
 loadMoreBtn.addEventListener('click', onLoadMoreClick);
 
-async function onFormSubmit(event) {
-  event.preventDefault();
+async function onFormSubmit(e) {
+  e.preventDefault();
   hideLoadMoreBtn();
   galleryList.innerHTML = '';
-  searchQuery = event.target.elements.input.value.trim();
+  searchQuery = e.target.elements.input.value.trim();
   page = 1;
 
   if (searchQuery === '') {
@@ -56,15 +56,15 @@ async function onFormSubmit(event) {
       renderImages(data);
       hideLoader();
     }
-  } catch (error) {
+  } catch (err) {
     iziToast.error({
       ...iziToastOptions,
       title: 'Error',
-      message: error,
+      message: err,
     });
   }
   checkBtnVisibleStatus();
-  event.target.reset();
+  e.target.reset();
 }
 
 async function onLoadMoreClick() {
@@ -74,11 +74,11 @@ async function onLoadMoreClick() {
   try {
     const data = await searchImages(searchQuery, page);
     renderImages(data);
-  } catch (error) {
+  } catch (err) {
     iziToast.error({
       ...iziToastOptions,
       title: 'Error',
-      message: error,
+      message: err,
     });
   }
 
